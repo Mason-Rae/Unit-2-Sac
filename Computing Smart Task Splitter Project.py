@@ -1,3 +1,4 @@
+from PIL import Image
 import random # Library for the randomiser
 import tkinter as tk # The library for the application
 from tkinter import messagebox, ttk # Certain things required from the library
@@ -211,8 +212,12 @@ def run_split():
             output.insert(tk.END, f"{i}. {step} – {int(mins)} minutes, {int(secs)} second\n") #Prints the step process
         else: # If none of the above
             output.insert(tk.END, f"{i}. {step} – {int(mins)} minutes, {int(secs)} seconds\n") #Prints the step process
+    output.insert(tk.END, "\nYou can do this!")
 
-keyword_dropdown_options = ["art", "assignment", "building", "coding", "composing", "cooking", "documenting", "english", "essay", "exam prep", "experiment", "final", "groupwork", "homework", "lab", "language", "learn", "literature", "math", "media", "plan", "presentation", "problems", "project", "reading", "report", "revision", "studying", "test", "test prep", "training", "vocab"]
+keyword_dropdown_options = ["art", "assignment", "building", "coding", "composing", "cooking", "documenting", "english",
+"essay", "exam prep", "experiment", "final", "groupwork", "homework", "lab", "language", "learn", "literature", "math",
+"media", "plan", "presentation", "problems", "project", "reading", "report", "revision", "studying", "test", "test prep",
+"training", "vocab"]
 #All options for the dropdown box to easliy select the task
 
 root = tk.Tk()#Starts the app
