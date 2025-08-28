@@ -1,4 +1,4 @@
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk # "pillow" Libary to allow images to be inserted
 import random # Library for the randomiser
 import tkinter as tk # The library for the application
 from tkinter import messagebox, ttk # Certain things required from the library
@@ -299,4 +299,5 @@ for page in pages:
     btn = tk.Button(root, text=page["title"], command=lambda p=page: open_page(p["title"], p["message"], p.get("subpages")))
     btn.pack(pady=5) # Creates all the numbers inside the index
     
+
 root.mainloop()#Loops app to keep it constantly running
