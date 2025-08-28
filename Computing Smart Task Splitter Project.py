@@ -1,8 +1,10 @@
-from PIL import Image
+from PIL import Image, ImageTk
 import random # Library for the randomiser
 import tkinter as tk # The library for the application
 from tkinter import messagebox, ttk # Certain things required from the library
 import math # Math library
+
+img = Image.open("Thumbs_Up.png") # Open image with Pillow
 
 keyword_list = ['essay', 'project', 'study',
 'presentation', 'coding', 'revision', 'experiment',
@@ -16,7 +18,7 @@ keyword_map = {
     "study": ["study", "prepare", "review", "learn", "tutor", "teach", "studying", "homework", "flashcards", "memorise"],
     "presentation": ["presentation", "speech", "slides", "presenting", "powerpoint", "pitch"],
     "coding": ["code", "program", "python", "develop", "java", "c++", "c#", "c sharp", "coding", "programming", "script", "debug" "debugging"],
-    "revision": ["revision", "revise", "test prep", "revising", "relearn"],
+    "revision": ["revision", "revise", "test prep", "revising", "relearn", "relearning"],
     "experiment": ["experiment", "lab", "science", "science project", "science experiment"],
     "reading": ["read", "book", "chapter", "novel", "literature", "reading", "read a book", "article"],
     "art": ["art", "draw", "paint", "poster", "design", "painting", "drawing", "designing", "sketching","canva", "collaboration", "collab"],
@@ -220,6 +222,58 @@ keyword_dropdown_options = ["art", "assignment", "building", "coding", "composin
 "training", "vocab"]
 #All options for the dropdown box to easliy select the task
 
+secret = random.randint(1, 20)
+if secret == 1:
+    hidden = "You rolled a 1 in 20 chance, well done!"
+else:
+    hidden = "There is a secret hidden here, good luck finding it."
+
+pages = [
+    {"title": "Index", "message": "This is the index page.",
+     "subpages": [
+         {"title": "List", "message": "Here is the list of all tasks currently available to be selected.\nSelect a task to learn about all the usable words.",
+          "subpages": [
+              {"title": "Essay", "message" : "Essay, Writing, English, Document, Documenting, Paper"},
+              {"title": "Project", "message": "Project, Assignment, Build, Prototype, Model"},
+              {"title": "Study", "message": "Study, Prepare, Review, Learn, Tutor, Teach, Homework, Flashcards, Memorise"},
+              {"title": "Presentation", "message": "Presentation, Speech, Slides, Presenting, Powerpoint, Pitch"},
+              {"title": "Coding", "message": "Code, Program, Develop, Script, Debug"},
+              {"title": "Revision", "message": "Revision, Test prep, Relearning"},
+              {"title": "Experiment", "message": "Experiment, Lab, Science"},
+              {"title": "Reading", "message": "Read, Book, Chapter, Novel, Literature, Article"},
+              {"title": "Art", "message": "Art, Draw, Paint, Poster, Design, Sketching"},
+              {"title": "Groupwork", "message": "Group, Team, Collaborate, Shared"},
+              {"title": "Exam", "message": "Exam, Final, Test"},
+              {"title": "Research", "message": "Research, Sources, Report, Investigate, Search, Case Study"},
+              {"title": "Math", "message": "Math, Algebra, Homework, Problems, Calculations, Trigonometry"},
+              {"title": "Language", "message": "Language, Duolingo, Vocab, Grammar"},
+              {"title": "Media", "message": "Media, Recording, Editing, Publishing, Uploading, Video Designing, Film, Content Creation"},
+              {"title": "Music", "message": "Music, Compose, Lyrics, Sing, Instrument"},
+              {"title": "Sport", "message": "Exercise, Train, Practice, Workout, Fitness"},
+              {"title": "Cooking", "message": "Cooking, Baking, Recipe, Meal Prep"},
+              {"title": "Planning", "message": "Schedule, Planning, Calender, Time Management"}
+              ]},
+         {"title": "Placeholder", "message": "This is the placeholder page."},
+         {"title": "About", "message": "This application is to allow you to work on a project/task with time efficiency without worrying about planning out the steps.",
+          "subpages": [
+              {"title": "  ", "message": f"{hidden} - {secret}"}]}
+     ]}
+]
+
+def open_page(title, message, subpages=None):
+    win = tk.Toplevel()
+    win.title(title)
+
+    tk.Label(win, text=message, font=("Arial", 14)).pack(padx=20, pady=20)
+
+    if subpages:
+        frame = tk.Frame(win)
+        frame.pack(pady=10)
+        for i, sub in enumerate(subpages):
+            btn = tk.Button(frame, text=sub["title"],
+                            command=lambda s=sub: open_page(s["title"], s["message"], s.get("subpages")))
+            btn.grid(row=i // 4, column=i % 4, padx=5, pady=5) # Customises the buttons to be more spread out
+
 root = tk.Tk()#Starts the app
 root.title("🧠 Smart Task Splitter")#Title for the app
 
@@ -233,7 +287,16 @@ entry_time.pack()#Enables box
 
 tk.Button(root, text="Split Task", command=run_split).pack(pady=5)#Button that will give a response once hit, that is favoured towards the user's options
 
+tk_img = ImageTk.PhotoImage(img) # Convert to Tkinter-compatible image
+
 output = tk.Text(root, height = 20, width = 80)#Customisation of the textbox
 output.pack()#Allows custom size to be used
 
+label = tk.Label(root, image=tk_img) # Create a label with the image
+label.pack(padx=10, pady=10) #Customising 
+
+for page in pages:
+    btn = tk.Button(root, text=page["title"], command=lambda p=page: open_page(p["title"], p["message"], p.get("subpages")))
+    btn.pack(pady=5) # Creates all the numbers inside the index
+    
 root.mainloop()#Loops app to keep it constantly running
