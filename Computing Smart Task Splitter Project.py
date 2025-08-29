@@ -1,4 +1,4 @@
-from PIL import Image, ImageTk # "pillow" Libary to allow images to be inserted
+from PIL import Image, ImageTk # "Pillow" Library to allow images be inserted
 import random # Library for the randomiser
 import tkinter as tk # The library for the application
 from tkinter import messagebox, ttk # Certain things required from the library
@@ -188,13 +188,16 @@ def run_split():
     big_task = entry_task.get() #Transfers the data
     time_id = entry_time.get() #Transfers the data
     
+    time = int(time_id) #Uses 'time' for a confirmed int variable
+    
     if not time_id.isdigit(): #Checks for if the time entered is a digit
         if time_id == "": #If nothing is entered
             messagebox.showerror("Error", "Time must be entered.")
+        elif time < 0:
+            messagebox.showerror("Error", "Time must be more than 0.")
         else: #If something that isn't a number is entered
-            messagebox.showerror("Error", "Time must be a number.")
+            messagebox.showerror("Error", "Time must be a number. E.G: \"70\"")
         return #Confirms whether or not the "number" is a digit or not
-    time = int(time_id) #Uses 'time' for a confirmed int variable
     
     if big_task.lower() == "random": #Grabs a word from the keyword list to display as a task
         big_task = random.choice(keyword_list)
@@ -222,11 +225,14 @@ keyword_dropdown_options = ["art", "assignment", "building", "coding", "composin
 "training", "vocab"]
 #All options for the dropdown box to easliy select the task
 
-secret = random.randint(1, 20)
+secret = random.randint(1, 20) # Selects a number from 1-20
 if secret == 1:
-    hidden = "You rolled a 1 in 20 chance, well done!"
+    hidden = "You rolled a 1 in 20 chance, well done!\nThe secret is you have good patience unless it was your first try."
+elif secret in (2, 3):
+    hidden = "The secret is still hidden, but you were half way there. \nIf you were lucky enough to get this, you'll be lucky enough to get the secret. \nGood Luck, you got this!"
 else:
-    hidden = "There is a secret hidden here, good luck finding it."
+    hidden = "There is a secret hidden here, good luck finding it.\nIt's a 1 in 20 chance to spawn"
+# Little joke to have the user try discover what the secret is
 
 pages = [
     {"title": "Index", "message": "This is the index page.",
@@ -256,7 +262,7 @@ pages = [
          {"title": "Placeholder", "message": "This is the placeholder page."},
          {"title": "About", "message": "This application is to allow you to work on a project/task with time efficiency without worrying about planning out the steps.",
           "subpages": [
-              {"title": "  ", "message": f"{hidden} - {secret}"}]}
+              {"title": "  ", "message": f"{hidden}"}]}
      ]}
 ]
 
@@ -277,27 +283,26 @@ def open_page(title, message, subpages=None):
 root = tk.Tk()#Starts the app
 root.title("🧠 Smart Task Splitter")#Title for the app
 
-tk.Label(root, text="Select your task (or type 'random')").pack()#Text above telling the user what to do
-entry_task = ttk.Combobox(root, values=keyword_dropdown_options, width = 35)#What is stored inside the box
+tk.Label(root, text="Select your task (or type 'random')", font=("Gill Sans Ultra Bold", 11)).pack()#Text above telling the user what to do
+entry_task = ttk.Combobox(root, values=keyword_dropdown_options, width = 35, font=("Franklin Gothic Medium", 11))#What is stored inside the box
 entry_task.pack()#Enables the box
 
-tk.Label(root, text="Time available (minutes)").pack()#Tells user whats happening
-entry_time = tk.Entry(root, width = 20)#Stored inside box
+tk.Label(root, text="Time available (minutes)", font=("Gill Sans Ultra Bold", 11)).pack()#Tells user whats happening
+entry_time = tk.Entry(root, width = 20, font=("Franklin Gothic Medium", 11))#Stored inside box
 entry_time.pack()#Enables box
 
 tk.Button(root, text="Split Task", command=run_split).pack(pady=5)#Button that will give a response once hit, that is favoured towards the user's options
 
-tk_img = ImageTk.PhotoImage(img) # Convert to Tkinter-compatible image
+thumbs_up = ImageTk.PhotoImage(img) # Convert to Tkinter-compatible image
 
-output = tk.Text(root, height = 20, width = 80)#Customisation of the textbox
+output = tk.Text(root, height = 20, width = 80, font=("Franklin Gothic Medium", 12))#Customisation of the textbox
 output.pack()#Allows custom size to be used
 
-label = tk.Label(root, image=tk_img) # Create a label with the image
+label = tk.Label(root, image=thumbs_up) # Create a label with the image
 label.pack(padx=10, pady=10) #Customising 
 
 for page in pages:
     btn = tk.Button(root, text=page["title"], command=lambda p=page: open_page(p["title"], p["message"], p.get("subpages")))
     btn.pack(pady=5) # Creates all the numbers inside the index
     
-
 root.mainloop()#Loops app to keep it constantly running
