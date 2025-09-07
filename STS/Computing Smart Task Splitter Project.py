@@ -196,6 +196,8 @@ def pokemon_game():
         enemy_name = "Keshav"
     elif enemy_name == 2:
         enemy_name = "Daniel"
+    elif enemy_name == 4:
+        enemy_name = "Mason"
     else:
         enemy_name = "Brandon"
     
@@ -203,7 +205,7 @@ def pokemon_game():
     enemy_hp = tk.IntVar(value=50) # Enemy health
     if enemy_name == "Daniel":
         enemy_hp = tk.IntVar(value=30)
-    elif enemy_name == "Brandon":
+    elif enemy_name in ('Brandon', 'Mason'):
         enemy_hp = tk.IntVar(value=75)
 
     status = tk.Label(win, text=f"A wild {enemy_name} appeared!", font=("Arial", 12))
@@ -403,4 +405,5 @@ for page in pages:
     btn = tk.Button(root, text=page["title"], command=lambda p=page: open_page(p["title"], p["message"], p.get("subpages")))
     btn.pack(pady=5) # Creates all the numbers inside the index
     
+
 root.mainloop()#Loops app to keep it constantly running
