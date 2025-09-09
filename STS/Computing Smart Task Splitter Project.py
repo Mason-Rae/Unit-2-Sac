@@ -177,9 +177,9 @@ def generate_task_responses(time):
             ("Review and adjust", round(time*0.45, 1)),
         ],
         "household": [
-            ("Determine how many there are", round(time*0.05, 1)),
-            ("List on urgency", round(time*0.05, 1)),
-            ("Complete all chores", round(time*0.65, 1)),
+            ("Determine how many there are", round(time*0.1, 1)),
+            ("List on urgency", round(time*0.1, 1)),
+            ("Complete all chores", round(time*0.55, 1)),
             ("Check the house for any uncompleted tasks", round(time*0.1, 1)),
             ("Complete the final chores", round(time*0.15, 1)),
         ]
@@ -191,24 +191,54 @@ def pokemon_game():
     win.title("Pokémon Battle") # Window Title
 
     # Simple Pokémon setup
-    enemy_name = random.randint(1, 3) # Number generator
-    if enemy_name == 1:
-        enemy_name = "Keshav"
-    elif enemy_name == 2:
-        enemy_name = "Daniel"
-    elif enemy_name == 4:
-        enemy_name = "Mason"
-    else:
-        enemy_name = "Brandon"
-    
     player_hp = tk.IntVar(value=50) # Player's health
-    enemy_hp = tk.IntVar(value=50) # Enemy health
-    if enemy_name == "Daniel":
-        enemy_hp = tk.IntVar(value=30)
-    elif enemy_name in ('Brandon', 'Mason'):
-        enemy_hp = tk.IntVar(value=75)
+    
+    enemy_name = random.randint(1, 6) # Number generator
+    match enemy_name:
+        case 1:
+            enemy_name = "Keshav"
+            enemy_hp = 50
+        case 2:
+            enemy_name = "Daniel"
+            enemy_hp = 30
+        case 3:
+            enemy_name = "Brandon"
+            enemy_hp = 80
+        case 4:
+            enemy_name = "Mason"
+            enemy_hp = 70
+        case 5:
+            enemy_name = "Dymonicc"
+            enemy_hp = 100
+        case 6:
+            enemy_name = "Jayden"
+            enemy_hp = 60
 
-    status = tk.Label(win, text=f"A wild {enemy_name} appeared!", font=("Arial", 12))
+    enemy_type = random.randint(1, 20) # Enemy type randomiser
+    if enemy_type == 1:
+        enemy_type = "demonic"
+    elif enemy_type in (2, 3):
+        enemy_type = "feral"
+    elif enemy_type == 4:
+        enemy_type = "manipulated"
+    elif enemy_type in (5, 6):
+        enemy_type = "stronk"
+    else:
+        enemy_type = "wild"
+    
+    #Calculates the amount of health the enemy has, based on enemy type
+    if enemy_type == "demonic":
+        enemy_hp = tk.IntVar(value=enemy_hp*2)
+    elif enemy_type == "feral":
+        enemy_hp = tk.IntVar(value=enemy_hp-10)
+    elif enemy_type == "manipulated":
+        enemy_hp = tk.IntVar(value=enemy_hp/2)
+    elif enemy_type == "stronk":
+        enemy_hp = tk.IntVar(value=enemy_hp+10)
+    else:
+        enemy_hp = tk.IntVar(value=enemy_hp)
+    
+    status = tk.Label(win, text=f"A {enemy_type} {enemy_name} appeared!", font=("Arial", 12))
     status.pack(pady=10)
 
     player_label = tk.Label(win, textvariable=player_hp, font=("Arial", 14)) # Player Title
@@ -217,14 +247,24 @@ def pokemon_game():
 
     enemy_label = tk.Label(win, textvariable=enemy_hp, font=("Arial", 14)) # Enemy Title
     enemy_label.pack()
-    tk.Label(win, text=f"{enemy_name} HP").pack()
+    tk.Label(win, text=f"{enemy_name} HP ({enemy_type})").pack()
 
+    plo = 5
+    phi = tk.IntVar(value=15)
+    
+    def player_attackup():
+        phi.set(phi.get() + 2)
+        status.config(text="Damage increase!")
+        win.after(1000, enemy_attack)
+        return
+    
     def player_attack():
-        dmg = random.randint(5, 15) # Player damage
+        
+        dmg = random.randint(plo, phi.get()) # Player damage
         enemy_hp.set(max(0, enemy_hp.get() - dmg)) # Dealing damage to enemy
         status.config(text=f"You dealt {dmg} damage!") # Text informing player how much damage was dealt
 
-        if enemy_hp.get() <= 0:
+        if enemy_hp.get() <= 0: # Label for when the player wins
             status.config(text="You won the battle!")
             winsound.Beep(1000, 200)
             return
@@ -232,18 +272,42 @@ def pokemon_game():
         win.after(1000, enemy_attack)
 
     def enemy_attack():
-        dmg = random.randint(5, 12) # Enemy damage
+        elo = 5
+        ehi = 12
+        
         if enemy_name == "Daniel":
-            dmg = random.randint(4, 10)
+            elo = elo-1
+            ehi = ehi-2
+        
+        match enemy_type:
+            case "feral":
+                ehi = ehi*2
+            case "manipulated":
+                if enemy_name in ('Jayden', "Daniel"):
+                    ehi = ehi*3
+                else:
+                    ehi = ehi-2
+            case "demonic":
+                if enemy_name == "Dymonicc":
+                    ehi = ehi*2
+                else:
+                    ehi = ehi+2
+            case "stronk":
+                 ehi = ehi+3
+            
+        dmg = random.randint(elo, ehi) # Enemy damage
         player_hp.set(max(0, player_hp.get() - dmg)) # Dealing damage to player
         status.config(text=f"{enemy_name} dealt {dmg} damage!")  # Text informing player how much damage was dealt
 
-        if player_hp.get() <= 0:
+        if player_hp.get() <= 0: # The label for when the player loses
             status.config(text="You fainted...")
             winsound.Beep(400, 600)
 
     attack_btn = tk.Button(win, text="Attack", command=player_attack) # The button for the user to attack the enemy
     attack_btn.pack(pady=10)
+    attackup_btn = tk.Button(win, text="Attack Up", command=player_attackup) # The button for the user to attack the enemy
+    attackup_btn.pack(pady=10)
+
 
 def split_task(task):
     task = task.lower() #Makes the task lowercase to deal with easily
@@ -298,13 +362,13 @@ def run_split():
             countdown(int((mins*60)+secs))
             root.after(1, winsound.Beep(1000, 500)) # Plays a sound after a task finishs
         else:
-            output.insert(tk.END, "\nYou can do this!") # Words of encouragement
+            output.insert(tk.END, "\nWell done!") # Words of encouragement
             winsound.PlaySound("Fnaf 1 Ending of each Shift Sound Effect.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
 
     print_step()
 
-keyword_dropdown_options = ["art", "assignment", "building", "coding", "composing", "cooking", "documenting", "english",
-"essay", "exam prep", "experiment", "final", "groupwork", "homework", "household", "lab", "language", "learn", "literature",
+keyword_dropdown_options = ["art", "assignment", "building", "chores", "coding", "composing", "cooking", "documenting",
+"english", "essay", "exam prep", "experiment", "final", "groupwork", "homework", "lab", "language", "learn", "literature",
 "math", "media", "plan", "presentation", "problems", "project", "reading", "report", "revision", "studying", "test",
 "test prep", "training", "vocab"]
 #All options for the dropdown box to easliy select the task
@@ -405,5 +469,4 @@ for page in pages:
     btn = tk.Button(root, text=page["title"], command=lambda p=page: open_page(p["title"], p["message"], p.get("subpages")))
     btn.pack(pady=5) # Creates all the numbers inside the index
     
-
 root.mainloop()#Loops app to keep it constantly running
