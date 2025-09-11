@@ -6,7 +6,6 @@ import math # Math library
 import time as timeImp # Allows for a countdown
 import winsound # Imports sound for the countdown to emit once finished
 
-
 img = Image.open("Thumbs_Up.png") # Open image with Pillow
 
 keyword_list = ['essay', 'project', 'study',
@@ -186,14 +185,21 @@ def generate_task_responses(time):
     } #Originated from A.I (Improved)
       #Changed to be changing times instead of being set
 
+most_recent_window = None # Variable for helping close the pokemon tabs
+
 def pokemon_game():
-    win = tk.Toplevel()
-    win.title("Pokémon Battle") # Window Title
+    close_game() # Closes the previous pokemon tab
+    global most_recent_window # Allows the variable changes to be seen outside the function
+    
+    poke = tk.Toplevel(root)
+    poke.title("Game Battle") # Window Title
+    
+    most_recent_window = poke  # update reference
 
     # Simple Pokémon setup
     player_hp = tk.IntVar(value=50) # Player's health
     
-    enemy_name = random.randint(1, 6) # Number generator
+    enemy_name = random.randint(1, 10) # Number generator
     match enemy_name:
         case 1:
             enemy_name = "Keshav"
@@ -206,56 +212,165 @@ def pokemon_game():
             enemy_hp = 80
         case 4:
             enemy_name = "Mason"
-            enemy_hp = 70
+            enemy_hp = 75
         case 5:
             enemy_name = "Dymonicc"
             enemy_hp = 100
         case 6:
             enemy_name = "Jayden"
+            enemy_hp = 55
+        case 7:
+            enemy_name = "Seb"
+            enemy_hp = 50
+        case 8:
+            enemy_name = "Gerard"
+            enemy_hp = 70
+        case 9:
+            enemy_name = "Duong"
+            enemy_hp = 65
+        case 10:
+            enemy_name = "Quan"
             enemy_hp = 60
 
-    enemy_type = random.randint(1, 20) # Enemy type randomiser
-    if enemy_type == 1:
+    enemy_type = random.randint(1, 40) # Enemy type randomiser
+# Matches number with type and hp modifier
+    if enemy_type in range(1, 2):
         enemy_type = "demonic"
-    elif enemy_type in (2, 3):
+        enemy_hp = tk.IntVar(value=enemy_hp*2)
+    elif enemy_type in range(3, 6):
         enemy_type = "feral"
-    elif enemy_type == 4:
+        enemy_hp = tk.IntVar(value=enemy_hp-10)
+    elif enemy_type in range(7, 8):
         enemy_type = "manipulated"
-    elif enemy_type in (5, 6):
+        enemy_hp = tk.IntVar(value=enemy_hp/2)
+    elif enemy_type in range(9, 12):
         enemy_type = "stronk"
+        if enemy_name == "Dymonicc":
+            enemy_hp = tk.IntVar(value=enemy_hp+20)
+        else:
+            enemy_hp = tk.IntVar(value=enemy_hp+10)
+    elif enemy_type == 7:
+        enemy_type = "natural"
+        if enemy_name == "Brandon":
+            enemy_hp = tk.IntVar(value=enemy_hp+50)
+        else:
+            enemy_hp = tk.IntVar(value=enemy_hp+25)
+    elif enemy_type in range(13, 18):
+        enemy_type = "glass"
+        enemy_hp = tk.IntVar(value=enemy_hp-25)
+    elif enemy_type in range(19, 20):
+        enemy_type = "quiet"
+        enemy_hp = tk.IntVar(value=enemy_hp+5)
+    elif enemy_type in range(21, 22):
+        enemy_type = "dumb"
+        enemy_hp = tk.IntVar(value=enemy_hp)
+    elif enemy_type == 23:
+        enemy_type = "smart"
+        enemy_hp = tk.IntVar(value=enemy_hp-5)
     else:
         enemy_type = "wild"
-    
-    #Calculates the amount of health the enemy has, based on enemy type
-    if enemy_type == "demonic":
-        enemy_hp = tk.IntVar(value=enemy_hp*2)
-    elif enemy_type == "feral":
-        enemy_hp = tk.IntVar(value=enemy_hp-10)
-    elif enemy_type == "manipulated":
-        enemy_hp = tk.IntVar(value=enemy_hp/2)
-    elif enemy_type == "stronk":
-        enemy_hp = tk.IntVar(value=enemy_hp+10)
-    else:
         enemy_hp = tk.IntVar(value=enemy_hp)
     
-    status = tk.Label(win, text=f"A {enemy_type} {enemy_name} appeared!", font=("Arial", 12))
+    status = tk.Label(poke, text=f"A {enemy_type} {enemy_name} appeared!", font=("Arial", 12))
     status.pack(pady=10)
 
-    player_label = tk.Label(win, textvariable=player_hp, font=("Arial", 14)) # Player Title
+    player_label = tk.Label(poke, textvariable=player_hp, font=("Arial", 14)) # Player Title
     player_label.pack()
-    tk.Label(win, text="Your HP").pack()
+    tk.Label(poke, text="Your HP").pack()
 
-    enemy_label = tk.Label(win, textvariable=enemy_hp, font=("Arial", 14)) # Enemy Title
+    enemy_label = tk.Label(poke, textvariable=enemy_hp, font=("Arial", 14)) # Enemy Title
     enemy_label.pack()
-    tk.Label(win, text=f"{enemy_name} HP ({enemy_type})").pack()
+    tk.Label(poke, text=f"{enemy_name} HP ({enemy_type})").pack()
+    
+    def enemy_attack():
+        elo = 5
+        ehi = 12
+        
+        match enemy_name:
+            case "Daniel":
+                elo = elo-1
+                ehi = ehi-2
+            case "Seb" | "Gerard":
+                elo = elo+1
+                ehi = ehi+1
+        
+        match enemy_type:
+            case "feral":
+                if enemy_name == "Keshav":
+                    ehi = ehi+2
+                ehi = ehi*2
+            case "manipulated":
+                if enemy_name in ('Jayden', "Daniel"):
+                    ehi = ehi*3
+                else:
+                    ehi = ehi-2
+            case "demonic":
+                if enemy_name == "Dymonicc":
+                    ehi = ehi*2
+                elif enemy_name == "Seb":
+                    elo = elo+4
+                else:
+                    ehi = ehi+2
+            case "stronk":
+                if enemy_name == "Mason":
+                    ehi = ehi*2
+                else:
+                    ehi = ehi+3
+            case "natural":
+                ehi = ehi-1
+            case "glass":
+                if enemy_name == "Duong":
+                    elo = elo+7
+                else:
+                    elo = elo+5
+                ehi = ehi+3
+            case "quiet":
+                if enemy_name == "Gerard":
+                    elo = elo+5
+                else:
+                    elo = elo+2
+                ehi = ehi-1
+            case "dumb":
+                elo = elo-2
+                ehi = ehi+2
+            case "smart":
+                elo = elo+4
+                if enemy_name != "Quan":
+                    ehi = ehi-2
+            
+        dmg = random.randint(elo, ehi) # Enemy damage
+        player_hp.set(max(0, player_hp.get() - dmg)) # Dealing damage to player
+        status.config(text=f"{enemy_name} dealt {dmg} damage!")  # Text informing player how much damage was dealt
 
-    plo = 5
-    phi = tk.IntVar(value=15)
+        if player_hp.get() <= 0: # The label for when the player loses
+            status.config(text="You fainted...")
+            winsound.PlaySound("Super Smash Bros Ultimate Final KO Sound Effect.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
+            root.after(1000, close_game()) # runs the function to close the tab
+        return
+
+    #List of player variables
+    plo = 5 # Player attack Low
+    phi = tk.IntVar(value=15) # Player attack High
+    phlo = 6 # Player Heal Low
+    phhi = tk.IntVar(value=10) # Player Heal High
+    pst = tk.IntVar(value=0) # Player stun value
+    stun_cooldown = tk.IntVar(value=0) # Player stun cooldown
     
     def player_attackup():
-        phi.set(phi.get() + 2)
-        status.config(text="Damage increase!")
-        win.after(1000, enemy_attack)
+        new_phi = phi.get() + 2
+        if new_phi > 25:
+            new_phi = 25
+        phi.set(new_phi)
+        status.config(text=f"Damage increase! (max 25 - current {phi.get()})")
+        
+        new_pst = pst.get()
+        if new_pst >= 1: # Checks to see if the stun is active
+            pst.set(new_pst - 1) # Disables stun
+            stun_cooldown.set(stun_cooldown.get() - 1)
+        else:
+            stun_cooldown.set(stun_cooldown.get() - 1)
+            poke.after(1000, enemy_attack) # has enemy attack function play
+        button_cooldown() # Activates the function to disable buttons
         return
     
     def player_attack():
@@ -266,48 +381,132 @@ def pokemon_game():
 
         if enemy_hp.get() <= 0: # Label for when the player wins
             status.config(text="You won the battle!")
-            winsound.Beep(1000, 200)
+            winsound.PlaySound("Super Smash Bros Ultimate Final KO Sound Effect.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
+            root.after(2000, close_game()) # runs the function to close the tab
             return
-
-        win.after(1000, enemy_attack)
-
-    def enemy_attack():
-        elo = 5
-        ehi = 12
+        attack_btn.config(state="disabled")
+        root.after(1000, lambda: attack_btn.config(state="normal"))
         
-        if enemy_name == "Daniel":
-            elo = elo-1
-            ehi = ehi-2
+        new_pst = pst.get()
+        if new_pst >= 1: # Checks to see if the stun is active
+            pst.set(new_pst - 1) # Disables stun
+            stun_cooldown.set(stun_cooldown.get() - 1)
+        else:
+            stun_cooldown.set(stun_cooldown.get() - 1)
+            poke.after(1000, enemy_attack) # has enemy attack function play
         
-        match enemy_type:
-            case "feral":
-                ehi = ehi*2
-            case "manipulated":
-                if enemy_name in ('Jayden', "Daniel"):
-                    ehi = ehi*3
-                else:
-                    ehi = ehi-2
-            case "demonic":
-                if enemy_name == "Dymonicc":
-                    ehi = ehi*2
-                else:
-                    ehi = ehi+2
-            case "stronk":
-                 ehi = ehi+3
+        button_cooldown() # Activates the function to disable buttons
+        return
+
+    def player_heal(): # Function of letting the player heal
+        hp_heal = random.randint(phlo, phhi.get()) # healing amounts
+        new_php = player_hp.get() + hp_heal # Turns the new health into a interger
+        if new_php > 50: # Checks if above 50
+            new_php = 50 # Turns it into 50
+        player_hp.set(new_php) # Uploads health to main variable
+        status.config(text=f"{hp_heal} health healed!") # Tells user how much healed
+        
+        new_pst = pst.get()
+        if new_pst >= 1: # Checks to see if the stun is active
+            pst.set(new_pst - 1) # Disables stun
+            stun_cooldown.set(stun_cooldown.get() - 1)
+        else:
+            stun_cooldown.set(stun_cooldown.get() - 1)
+            poke.after(1000, enemy_attack) # has enemy attack function play
+        button_cooldown() # Activates the function to disable buttons
+        return
+    
+    def player_healup(): # Function for heal to be more powerful
+        new_phhi = phhi.get() + 3 # Increases the variable by three
+        if new_phhi > 20: # Checks to see if it passes the max value
+            new_phhi = 20 # If above max, set as max
+        phhi.set(new_phhi) # Uploads new result
+        status.config(text=f"Heal increase! (max 20 - current {phhi.get()})")
+        
+        new_pst = pst.get()
+        if new_pst >= 1: # Checks to see if the stun is active
+            pst.set(new_pst - 1) # Disables stun
+            stun_cooldown.set(stun_cooldown.get() - 1)
+        else:
+            stun_cooldown.set(stun_cooldown.get() - 1)
+            poke.after(1000, enemy_attack) # has enemy attack function play
+        button_cooldown() # Activates the function to disable buttons
+        return
+        
+    def player_stun(): # Increases the stun value
+        cooldown = stun_cooldown.get()
+        if cooldown == 0:
+            new_pst = pst.get()
+            if new_pst > 1:
+                new_pst = 1
+                pst.set(new_pst) # Sets the stun value to a max of 1
+            pst.set(new_pst + 1)
+            status.config(text=f"Enemy stunned - spend 3 turns to regain ability") # Informs player
+            stun_cooldown.set(cooldown + 3)
+        else:
+            new_pst = pst.get()
+            stun_cooldown.set(stun_cooldown.get() - 1)
+            status.config(text=f"Stun on cooldown - Turn spent") # Informs player
+            if new_pst == 0:
+                poke.after(1000, enemy_attack) # has enemy attack function play
+            new_pst = 0
+            pst.set(new_pst)
+        button_cooldown() # Activates the function to disable buttons
+        return
             
-        dmg = random.randint(elo, ehi) # Enemy damage
-        player_hp.set(max(0, player_hp.get() - dmg)) # Dealing damage to player
-        status.config(text=f"{enemy_name} dealt {dmg} damage!")  # Text informing player how much damage was dealt
+    
+    def button_cooldown(): # Function to disable buttons for enemy attack to play
+        for button in buttons:
+            button.config(state="disabled") # Disables all buttons
+        root.after(1000, lambda: [button.config(state="normal") for button in buttons]) # Enables all buttons
+        return
 
-        if player_hp.get() <= 0: # The label for when the player loses
-            status.config(text="You fainted...")
-            winsound.Beep(400, 600)
+    #Buttons for the player's choice
+    # First row for attack stuff
+    row1 = tk.Frame(poke) # This is created so the buttons can sit next to each other
+    row1.pack(pady=5)
+    attack_btn = tk.Button(row1, text="Attack", command=player_attack)
+    attack_btn.pack(side='left', padx=5)
+    attackup_btn = tk.Button(row1, text="Attack Up", command=player_attackup)
+    attackup_btn.pack(side='left', padx=5)
 
-    attack_btn = tk.Button(win, text="Attack", command=player_attack) # The button for the user to attack the enemy
-    attack_btn.pack(pady=10)
-    attackup_btn = tk.Button(win, text="Attack Up", command=player_attackup) # The button for the user to attack the enemy
-    attackup_btn.pack(pady=10)
+    # Second row for healing stuff
+    row2 = tk.Frame(poke) # This is created so the buttons can sit next to each other
+    row2.pack(pady=5)
+    heal_btn = tk.Button(row2, text="Heal", command=player_heal)
+    heal_btn.pack(side='left', padx=5)
+    healup_btn = tk.Button(row2, text="Heal Up", command=player_healup)
+    healup_btn.pack(side='left', padx=5)
+    
+    # Third row for stun
+    row3 = tk.Frame(poke) # This is created so the buttons can sit next to each other
+    row3.pack(pady=5)
+    stun_btn = tk.Button(row3, text="Stun", command=player_stun)
+    stun_btn.pack(side='left', padx=5)
+    
+    game_index_btn = tk.Button(poke, text="Index", command=Game_index)
+    game_index_btn.pack()
+    
+    buttons = [attack_btn, attackup_btn, heal_btn, healup_btn, stun_btn]
+    return
 
+def close_game(): # Function to close the pokemon tab once the player has fainted, won or opened another tab
+    global most_recent_window # Assigns the global variable
+    if most_recent_window != None:
+        most_recent_window.destroy() # Closes the specific tab
+        most_recent_window = None # Sets the variable to nothing for next use
+    return
+
+def Game_index(): # Function that will tell the player about what they can vs
+    game_index = tk.Toplevel(root)
+    game_index.title("Game Index")
+    
+    Sub_title = tk.Label(game_index, text="Characters:", font=("Arial", 15)).pack()
+    characters = tk.Label(game_index, text="Keshav \nDaniel \nBrandon \nMason \nDymonicc \nJayden \nSeb \nGerard \nDuong \nQuan").pack()
+    
+    Sub_title2 = tk.Label(game_index, text="Types:", font=("Arial", 15)).pack()
+    types = tk.Label(game_index, text="Demonic \nManipulated \nFeral \nStronk \nNatural \nGlass \nQuiet \nWild \nDumb \nSmart").pack()
+    return
 
 def split_task(task):
     task = task.lower() #Makes the task lowercase to deal with easily
@@ -366,6 +565,7 @@ def run_split():
             winsound.PlaySound("Fnaf 1 Ending of each Shift Sound Effect.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
 
     print_step()
+    return
 
 keyword_dropdown_options = ["art", "assignment", "building", "chores", "coding", "composing", "cooking", "documenting",
 "english", "essay", "exam prep", "experiment", "final", "groupwork", "homework", "lab", "language", "learn", "literature",
@@ -373,15 +573,42 @@ keyword_dropdown_options = ["art", "assignment", "building", "chores", "coding",
 "test prep", "training", "vocab"]
 #All options for the dropdown box to easliy select the task
 
-secret = random.randint(1, 20) # Selects a number from 1-20
-if secret == 1:
-    hidden = "You rolled a 1 in 20 chance, well done!\nThe secret is you have good patience unless it was your first try."
-elif secret in (2, 3):
-    hidden = "The secret is still hidden, but you were half way there. \nIf you were lucky enough to get this, you'll be lucky enough to get the secret. \nGood Luck, you got this!"
-else:
-    hidden = "There is a secret hidden here, good luck finding it.\nIt's a 1 in 20 chance to spawn. \nReset the app to try again."
-# Little joke to have the user try discover what the secret is
 
+
+def secret():
+    secr = tk.Toplevel(root) # Creates its own page
+    secr.title("Secret") # GGives it a title
+    close_secret() # Uses the function to close a previous one, if it existed
+    global most_recent_window2 # Generates a tag to be deleted
+    most_recent_window2 = secr
+    
+    status = tk.Label(secr, text="", font=("Arial", 12)) # Creates the text location to talk to the user
+    status.pack(pady=10)
+    
+    secret_num = random.randint(1, 1000) # Selects a number from 1-1000
+    if secret_num == 1:
+        status.config(text="You've done it. The 1 in 1000! \nHere it is, in the palm of your hand. \nThe light you've been waiting for. \nCongratulations! \nBut what about the darkness...")
+    elif secret_num in range(2, 11):
+        status.config(text="You rolled a 1 in 100 chance, I bet you didn't think this existed. \nYou have amazing luck and patience, take those skills to the casino! \nGood luck! \nBut once again, have you fully reached the light...")
+    elif secret_num in range(12, 62):
+        status.config(text="You rolled a 1 in 20 chance, well done!\nThe secret is you have good patience unless it was your first try. \nBut is this really the end...")
+    elif secret_num in range(63, 163):
+        status.config(text="You rolled a 1 in 10 chance. \nThe secret is still hidden, but you were half way there. \nIf you were lucky enough to get this, you'll be lucky enough to get the secret. \nGood Luck, you got this!")
+    elif secret_num in range(164, 364):
+        status.config(text="You rolled a 1 in 5 chance. \nYou've only just started you journey, so keep at it! \nGood luck!")
+    else:
+        status.config(text="There is a secret hidden here, good luck finding it.\nIt's a 1 in 20 chance to appear.")
+    # Little joke to have the user try discover what the secret is
+    return
+
+most_recent_window2 = None
+def close_secret(): # Function to close the pokemon tab once the player has fainted
+    global most_recent_window2 # Assigns the global variable
+    if most_recent_window2 != None:
+        most_recent_window2.destroy() # Closes the specific tab
+        most_recent_window2 = None # Sets the variable to nothing for next use
+    return
+    
 pages = [
     {"title": "Index", "message": "This is the index page. \nThank you for clicking the “Index Page”!",
      "subpages": [
@@ -411,7 +638,8 @@ pages = [
          {"title": "Placeholder", "message": "This is the placeholder page."},
          {"title": "About", "message": "This is the core of the S.T.S (AKA Smart Task Splitter). This page would allow users such as yourself to find various subtasks in tasks. \nThis could allow people to gather information upon a selection of tasks to gain an idea of what their specific tasks could be about. \nHowever some of the tasks subtasks  won't have the direct information for the users so we apologise for that…\n\nThank you for visiting \"The Index\"...",
           "subpages": [
-              {"title": "  ", "message": f"{hidden}"}]}
+              {"title": "  ", "message": "hey"}
+            ]}
      ]}
 ]
 
@@ -419,12 +647,22 @@ def open_page(title, message, subpages=None):
     if title == "Placeholder":
         pokemon_game()
         return
+    elif title == "  ":
+        secret()
+        return
+    # If the message is a function (callable), call it now
+    if callable(message):
+        message_text = message()
+    else:
+        message_text = str(message)
 
     win = tk.Toplevel()
     win.title(title)
 
-    tk.Label(win, text=message, font=("Arial", 14)).pack(padx=20, pady=20)
+    # Show the result text
+    tk.Message(win, text=message_text, font=("Arial", 14), width=800).pack(padx=20, pady=20)
 
+    # Add subpage buttons
     if subpages:
         frame = tk.Frame(win)
         frame.pack(pady=10)
@@ -432,6 +670,7 @@ def open_page(title, message, subpages=None):
             btn = tk.Button(frame, text=sub["title"],
                             command=lambda s=sub: open_page(s["title"], s["message"], s.get("subpages")))
             btn.grid(row=i // 4, column=i % 4, padx=5, pady=5)
+    return
 
 root = tk.Tk()#Starts the app
 root.title("🧠 Smart Task Splitter")#Title for the app
@@ -465,6 +704,8 @@ def countdown(t):
         root.after(1000, countdown, t-1)  # Run again after 1s
     else:
         output2.delete(1.0, tk.END) # Resets the timer again
+    return
+
 for page in pages:
     btn = tk.Button(root, text=page["title"], command=lambda p=page: open_page(p["title"], p["message"], p.get("subpages")))
     btn.pack(pady=5) # Creates all the numbers inside the index
